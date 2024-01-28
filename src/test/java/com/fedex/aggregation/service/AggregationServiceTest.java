@@ -33,7 +33,6 @@ public class AggregationServiceTest {
     }
 
     @Test
-    @Ignore
     public void test_multiple_batch_calls() {
         PricingClient mockPricingClient = Mockito.mock(PricingClient.class);
         TrackClient mockTrackClient = Mockito.mock(TrackClient.class);
