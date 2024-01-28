@@ -1,0 +1,56 @@
+- Project layout is a typical layout of an API implementation with Springboot - separate packages for controller,
+  services and data/value objects, as well as clients for backend services.
+
+- Although I know Spring Webflux is a better choice for high scalability and availability (utilizing non blocking I/O)
+  I have not enough proficiency to do this assignment on a narrow timeframe based on Webflux. I understand that main goal
+  is to demonstrate the fundamental concurrency concepts, I have used the frameworks that I'm familiar with - Spring (Boot)
+  with embedded Tomcat server.
+  
+- I have used latest stable versions of Java & Spring Boot to build the aggregation API, as a general practice, if I start
+  a new project I tend to pick the latest available versions of the tools/frameworks to have more support timeframe and
+  reduced risk of vulnerabilities, enabled by fixes in each release(s).version(s).
+
+- In order to satisfy the requirements of the assignments,  I worked with execution services in Java concurrency package
+  with fixed sized thread pools by choice. The values I have assigned can be reconfigured on application.yml configuration
+  file to meet higher (or less) demanding requirements. I have chosen a reasonable size (mostly 10) for the size of the
+  thread pools used by executor services by default, so as not to introduce bottlenecks to ensure SLA requirements.
+    
+- Since backend services are delivered as a Docker image, I have reused it also for integration test purposes as a test
+  container. This might increase the build time, and makes the build process dependent on a running Docker environment,
+  I think the benefits of testing against an actual service outweighs the costs.
+  
+- In general, I have tried to use (Completable)Future objects whenever there's a wait time involved to get a result - i.e.;
+ (callbacks methods, api calls, etc.) to prevent unnecessary blocking code.
+  
+- I used a CylicBarrier (Java concurrency package) for queue threshold and queue timeout implementation, as it provides
+  both functionality with one method - await(timeout). The threads that trigger a cyclic barrier threshold exceeded are
+  taken from a thread pool for an ExecutorService called 'batchCallExecutorService', taken for each individual split query
+  parameter request, waiting in the queue. When the threshold (5) is exceeded, it triggers a an API call. This threshold
+  and timout values can be changed by the 'service.call.batch.size' and 'service.call.batch.timeout' properties in
+  application.yml.
+  
+- AggregationService class is the service that aggregates partially retrieved data (i.e.; individual query results for split
+  query parameters) into the final response, relying on callbacks for each individual split query parameter value. When all
+  callbacks are called or a request timeout occurs, aggregation for the whole query parameter (pricing/shipments/track) is
+  completed. This ensures that even if there's missing data, all the other available data to be returned to client. All
+  individual queries for pricing, track and shipments are executed in parallel with CompletableFuture objects that notifies
+  requesting component when all parallel requests are processed to avoid unnecessary waiting time.
+  
+- ApiCallService class is the service that orchestrates underlying backend API calls, batching them into groups of 5, unless
+  a timeout occurs as required. Each request is split into individual (distinct) split query parameter values, which are
+  queued for a batch call to be executed asynchronously. Each request parameter is accompanied by a callback method to notify
+  AggregationService as mentioned above, also done asynchronously to prevent blocking wait time. ApiCallService is extended
+  by PricingApiCallService, TrackApiCallService and ShipmentsApiCallService just to be able to work with different data
+  types returned, yet all in the form of a Map object. Since they share almost all the API call logic, the main class is
+  the base class; ApiCallService.
+  
+- In order to minimize the boilerplate code that's required for backend service calls, I have used feign clients. The only
+  extra code I had to introduce for feign is a bean definition that prevents retries for failing API calls to backend
+  services - this is a desired functionality that maybe not a good idea in a production environment, but for the purposes
+  of this assignment  that requires predictability, it's disabled on purpose.
+  
+- I have used a ConcurrentLinkedQueue and ConcurrentHashMap objects to queue requests and store aggregation results to
+  have thread safety without introducing additional synchronized blocks.
+
+  Thanks for reviewing my assignment.
+
