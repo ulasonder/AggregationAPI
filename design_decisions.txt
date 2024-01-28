@@ -52,5 +52,8 @@
 - I have used a ConcurrentLinkedQueue and ConcurrentHashMap objects to queue requests and store aggregation results to
   have thread safety without introducing additional synchronized blocks.
 
+- I have not spent too much time on proper request/response validation such as input format/length/type check, etc. and
+  extensive unit testing as this assignment is for interviewing purposes.
+
   Thanks for reviewing my assignment.
 
