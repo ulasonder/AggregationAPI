@@ -66,14 +66,10 @@ public class AggregationService {
                         cbList.forEach(cb -> shipments.put(cb.getQueryParam(), (List<String>) cb.getQueryResult()));
                         return;
                     }
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(10);
-                    } catch (InterruptedException e) {
-                        // nothing to do
-                    }
+                    sleep();
                 }
-                // within 10 seconds response timeout
-            }, aggregationExecutorService).get(9, TimeUnit.SECONDS);
+                // response timeout is 10 secs, wait for a bit less than response timeout
+            }, aggregationExecutorService).get(9900, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             // nothing to do
         }
@@ -92,11 +88,7 @@ public class AggregationService {
                         cbList.forEach(cb -> pricing.put(cb.getQueryParam(), (BigDecimal) cb.getQueryResult()));
                         return;
                     }
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(10);
-                    } catch (InterruptedException e) {
-                        // do nothing
-                    }
+                    sleep();
                 }
                 // within 10 seconds response timeout
             }, aggregationExecutorService).get(9, TimeUnit.SECONDS);
@@ -118,11 +110,7 @@ public class AggregationService {
                         cbList.forEach(cb -> track.put(cb.getQueryParam(), (String) cb.getQueryResult()));
                         return;
                     }
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(10);
-                    } catch (InterruptedException e) {
-                        // nothing to do
-                    }
+                    sleep();
                 }
                 // within 10 seconds response timeout
             }, aggregationExecutorService).get(9, TimeUnit.SECONDS);
@@ -136,9 +124,17 @@ public class AggregationService {
         return Arrays.stream(query.split(",")).filter(not(String::isBlank)).distinct().toList();
     }
 
+    private void sleep() {
+        try {
+            TimeUnit.MILLISECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            // nothing to do
+        }
+    }
+
     @PreDestroy
     @SneakyThrows
-    void shutdownExecutors() {
+    public void shutdown() {
         aggregationExecutorService.shutdown();
         if (!aggregationExecutorService.awaitTermination(5, TimeUnit.SECONDS)) {
             aggregationExecutorService.shutdownNow();

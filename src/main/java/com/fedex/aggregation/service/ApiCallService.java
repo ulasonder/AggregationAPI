@@ -1,6 +1,7 @@
 package com.fedex.aggregation.service;
 
 import com.fedex.aggregation.client.APIClient;
+import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.Map;
@@ -76,5 +77,17 @@ public abstract class ApiCallService<T extends Map> {
             // nothing to do, response will be null
         }
         return response;
+    }
+
+    @SneakyThrows
+    void doShutdown() {
+        batchCallExecutorService.shutdown();
+        if (!batchCallExecutorService.awaitTermination(5, TimeUnit.SECONDS)) {
+            batchCallExecutorService.shutdownNow();
+        }
+        serviceCallexecutorService.shutdown();
+        if (!serviceCallexecutorService.awaitTermination(5, TimeUnit.SECONDS)) {
+            serviceCallexecutorService.shutdownNow();
+        }
     }
 }

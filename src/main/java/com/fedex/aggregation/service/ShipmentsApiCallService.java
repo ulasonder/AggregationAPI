@@ -1,6 +1,7 @@
 package com.fedex.aggregation.service;
 
 import com.fedex.aggregation.client.ShipmentsClient;
+import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,10 @@ public class ShipmentsApiCallService extends ApiCallService<Map<String, List<Str
                                    @Value("${service.call.threadpool.size}") Integer serviceCallThreadPoolSize,
                                    @Value("${batch.call.threadpool.size}") Integer batchCallThreadPoolSize) {
         super(shipmentsClient, batchSize, batchTimeout, serviceCallThreadPoolSize, batchCallThreadPoolSize);
+    }
+
+    @PreDestroy
+    void shutdown() {
+        doShutdown();
     }
 }
