@@ -1,10 +1,5 @@
 - Project layout is a typical layout of an API implementation with Springboot - separate packages for controller,
   services and data/value objects, as well as clients for backend services.
-
-- Although I know Spring Webflux is a better choice for high scalability and availability (utilizing non blocking I/O)
-  I have not enough proficiency to do this assignment on a narrow timeframe based on Webflux. I understand that main goal
-  is to demonstrate the fundamental concurrency concepts, I have used the frameworks that I'm familiar with - Spring (Boot)
-  with embedded Tomcat server.
   
 - I have used latest stable versions of Java & Spring Boot to build the aggregation API, as a general practice, if I start
   a new project I tend to pick the latest available versions of the tools/frameworks to have more support timeframe and
