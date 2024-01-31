@@ -1,4 +1,4 @@
-# FedEx Assignment - AggregationAPI
+# FedEx - AggregationAPI
 
 <p>AggregationAPI is a RESTful API that's built with Java (version: 21) / Maven / Spring Boot (version 3.2.2)
 that aggregates responses from various other backend service endpoints (pricing/track/shipments) with reduced number of
