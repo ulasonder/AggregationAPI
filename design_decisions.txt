@@ -50,5 +50,3 @@
 - I have not spent too much time on proper request/response validation such as input format/length/type check, etc. and
   extensive unit testing as this assignment is for interviewing purposes.
 
-  Thanks for reviewing my assignment.
-
