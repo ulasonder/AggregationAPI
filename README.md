@@ -1,13 +1,5 @@
 # FedEx - AggregationAPI
 
-## Personal note
-<p>This is the assignment FedEx wants you to complete to decide whether they would interview you or not for working as a back-end developer. I rejected doing this just to have an interview with them 
-for a couple of times, before finally deciding doing it, partly because I had time at hand, and partly because I was curious where that would lead me to.</p>
-
-<p> They are lazy to do the review. They might not have even looked at my assignment at all if I haven't pushed them doing it via my recruitment agency. And finally they rejected the assignment based on scalability concerns, which was not in the original requirements. They expect you to finish the assignment in 8 hours. But to do it like they want, this would take much more than 8 hours.</p>
-
-<p>Main reason that I do this is to let other developers know what they're getting into before they spend time on a FedEx assignment.</p>
-
 ## Overview
 <p>AggregationAPI is a RESTful API that's built with Java (version: 21) / Maven / Spring Boot (version 3.2.2)
 that aggregates responses from various other backend service endpoints (pricing/track/shipments) with reduced number of
